@@ -1,0 +1,6 @@
+config BR2_PACKAGE_LDD
+	bool "ldd"
+	help
+	  Includes kernel module examples
+	  from Linux Device Drivers 3rd Edition
+	  and init scripts to load them at startup.
