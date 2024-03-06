@@ -5,7 +5,9 @@ device=$1
 # Support read/write for owner and group, read only for everyone using 644
 mode="664"
 
-if [ $# -lt 1 || $# -gt 3 || $# -eq 2 ]; then
+module_dir=/lib/modules/$(uname -r)/extra
+
+if [ $# -lt 1 ] || [ $# -gt 3 ] || [ $# -eq 2 ]; then
   echo "Wrong number of arguments"
   echo "usage: $0 module_name [MIN MAX] "
   echo "Will create a corresponding device /dev/module_name associated with module_name.ko"
@@ -26,7 +28,7 @@ else
 fi
 
 echo "Load our module, exit on failure"
-insmod $module || exit 1
+insmod ${module_dir}/${module}.ko || exit 1
 echo "Get the major number (allocated with allocate_chrdev_region) from /proc/devices"
 major=$(awk "\$2==\"$module\" {print \$1}" /proc/devices)
 if [ ! -z ${major} ]; then
@@ -36,7 +38,7 @@ if [ ! -z ${major} ]; then
     from=$2
     to=$3
     for i in $(seq $from $to) ; do
-      echo "Remove any existing /dev node for /dev/${devicea}${i}"
+      echo "Remove any existing /dev node for /dev/${device}${i}"
       rm -f /dev/${device}${i}
       echo "Add a node for our device at /dev/${device}${i} using mknod"
       mknod /dev/${device}${i} c $major ${i}
