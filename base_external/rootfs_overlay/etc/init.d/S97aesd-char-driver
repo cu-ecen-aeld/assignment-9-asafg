@@ -1,0 +1,19 @@
+#!/bin/sh
+
+script_dir=/sbin
+
+case "$1" in
+  start)
+    echo "Loading AESD char driver..."
+    ${script_dir}/module_load aesdchar
+    ;;
+  stop)
+    echo "Unloading AESD char driver..."
+    ${script_dir}/module_unload aesdchar
+    ;;
+  *)
+    echo "Usage: $0 {start|stop}"
+    exit 1
+esac
+exit 0
+
